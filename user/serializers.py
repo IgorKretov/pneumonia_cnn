@@ -1,7 +1,5 @@
 from django.contrib.auth import get_user_model, authenticate
-from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
-
 
 
 class LoginSerializer(serializers.Serializer):
@@ -36,12 +34,39 @@ class UserSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         return get_user_model().objects.create_user(**validated_data)
 
+
+class UserUpdateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = get_user_model()
+        fields = ('email', 'name', 'address')
+        extra_kwargs = {
+            'email': {'read_only': True},
+            'name' : {'required': True}
+        }
+
     def update(self, instance, validated_data):
-        password = validated_data.pop('password', None)
         user = super().update(instance, validated_data)
-
-        if password:
-            user.set_password(password)
-            user.save()
-
         return user
+
+
+class PasswordChangeSerializer(serializers.Serializer):
+    model = get_user_model()
+    current_password = serializers.CharField(
+        required=True,
+        style={'input_type': 'password'}
+    )
+    new_password = serializers.CharField(
+        required=True,
+        min_length=6,
+        style={'input_type': 'password'}
+    )
+
+    def check_current_password(self, user, current_password):
+        if not user.check_password(current_password):
+            raise serializers.ValidationError('현재 비밀번호가 일치하지 않습니다.')
+
+    def change_password(self, user, current_password, new_password):
+        self.check_current_password(user, current_password)
+        user.set_password(new_password)
+        user.save()
