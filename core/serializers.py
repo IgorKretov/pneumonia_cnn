@@ -1,18 +1,22 @@
 from rest_framework import serializers
-from api import models
+from core import models
 
 
-class TaskSerializer(serializers.ModelSerializer):
-    
+class ArchiveSerializer(serializers.ModelSerializer):
+
     class Meta:
-        model = models.Task
-        fields = '__all__'
+        model = models.Archive
+        fields = ['id', 'name', 'info']
+
 
 class ImageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Image
-        fields = '__all__'
+        fields = [
+            'id', 'original_name', 'info',
+            'saved_name', 'saved_path', 'archive'
+        ]
         extra_kwargs = {
-            'task': {'read_only': True}
+            'archive': {'read_only': True}
         }

@@ -1,7 +1,7 @@
 from django.db import models
 
 
-class Task(models.Model):
+class Archive(models.Model):
     name = models.CharField(max_length=50)
     info = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -11,8 +11,8 @@ class Task(models.Model):
 
 
 class Image(models.Model):
-    task = models.ForeignKey(
-        Task,
+    archive = models.ForeignKey(
+        Archive,
         on_delete=models.CASCADE
     )
     original_name = models.CharField(max_length=255)
@@ -20,6 +20,6 @@ class Image(models.Model):
     saved_name = models.CharField(max_length=255)
     saved_path = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
-    
+
     def __str__(self):
-        return self.saved_name
+        return self.original_name
