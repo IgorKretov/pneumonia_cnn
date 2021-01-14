@@ -1,0 +1,50 @@
+{% extends "frontend/base.html" %}
+{% block b1 %}
+<h3>Archive Images</h3>
+{% endblock %}
+{% block b2 %}
+
+<div class="mx-5 row row-cols-4" id="image-list">
+</div>
+
+<script>
+  var list = document.getElementById("image-list")
+  var url_to_list = window.location.href.split('/')
+  var archive_id = url_to_list[url_to_list.length-2]
+  var url = '/api/archive/image_list/' + archive_id
+
+  function getImageList(){
+    fetch(url, {
+      method: 'get',
+      headers: {
+        'Content-type':'application/json'
+      }
+    })
+    .then((resp) => resp.json())
+    .then((data) => {
+      console.log('data: ', data)
+
+      for (var index in data) {
+        var original_name = data[index]['original_name']
+        var image_source = data[index]['image_source']
+
+        var image = `
+          <div class="col">
+            <div class="card border-dark mb-3" style="max-width: 18rem;">
+              <div class="card-header">${parseInt(index) + 1}</div>
+              <div class="card-body text-dark">
+                <h5 class="card-title"><a href="/archive/">${original_name}</a></h5>
+                <p class="card-text">${image_source}</p>
+              </div>
+            </div>
+          </div>
+        `
+        list.innerHTML += image
+        }
+    })
+    .catch(error => console.log(error))
+  }
+
+  getImageList()
+</script>
+{% endblock %}

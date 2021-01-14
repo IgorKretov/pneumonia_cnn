@@ -1,7 +1,16 @@
-#form-wrapper{
+.form-wrapper {
   position: -webkit-sticky;
   position: sticky;
   top: 0rem;
-  margin-left: 100px;
-  margin-right: 100px;
+  margin-left: 150px;
+  margin-right: 150px;
+}
+
+.button-wrapper {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0rem;
+  margin-left: 150px;
+  margin-right: 150px;
+  margin-bottom: 50px;
 }

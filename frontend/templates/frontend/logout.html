@@ -1,0 +1,33 @@
+{% extends "frontend/base.html" %}
+{% block b1 %}
+<h4 class="lead text-muted" style="font-size:1.7em">빠르고 정확한 폐렴 진단</h4>
+<h1 style="font-size:3em">Pneumonia_CNN</h1><br>
+<br>
+<h4>정말 로그아웃 하시겠습니까?</h4>
+<button id="logout" class="btn btn-dark mt-5 btn-lg">로그아웃</button>
+
+<script>
+  var csrftoken = getCookie('csrftoken');
+
+  function logout(){
+    console.log('로그아웃 클릭')
+
+    var url = '/api/user/logout'
+    fetch(url, {
+      method: 'post',
+      headers: {
+        'Content-type': 'application/json',
+        'X-CSRFToken': csrftoken
+      },
+    })
+    .then((resp) => {
+      console.log(resp)
+      window.location.href='/'
+    })
+    .catch(error => console.log(error))
+  }
+
+  var logoutBtn = document.getElementById('logout')
+  logoutBtn.addEventListener('click', logout)
+</script>
+{% endblock %}

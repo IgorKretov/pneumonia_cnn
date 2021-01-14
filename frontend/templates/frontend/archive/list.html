@@ -1,0 +1,47 @@
+{% extends "frontend/base.html" %}
+{% block b1 %}
+<h3>Archive 리스트</h3>
+{% endblock %}
+{% block b2 %}
+<div class="mx-5 row row-cols-4" id="archive-list">
+</div>
+
+<script>
+  var list = document.getElementById("archive-list")
+
+  function buildList(){
+    fetch('/api/archive/list', {
+      method: 'get',
+      headers: {
+        'Content-type':'application/json'
+      }
+    })
+    .then((resp) => resp.json())
+    .then((data) => {
+      console.log('data: ', data)
+
+      for (var index in data) {
+        var id = data[index]['id']
+        var name = data[index]['name']
+        var info = data[index]['info']
+
+        var archive = `
+          <div class="col">
+            <div class="card border-dark mb-3" style="max-width: 18rem;">
+              <div class="card-header">${parseInt(index) + 1}</div>
+              <div class="card-body text-dark">
+                <h5 class="card-title"><a href="/archive/${id}">${name}</a></h5>
+                <p class="card-text">${info}</p>
+              </div>
+            </div>
+          </div>
+        `
+        list.innerHTML += archive
+        }
+    })
+    .catch(error => console.log(error))
+  }
+
+  buildList()
+</script>
+{% endblock %}

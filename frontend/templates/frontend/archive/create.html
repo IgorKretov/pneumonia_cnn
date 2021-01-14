@@ -1,0 +1,40 @@
+{% extends "frontend/base.html" %}
+{% block b1 %}
+<h3 class='mb-5'>Archive 생성 페이지</h3>
+<div id="form-wrapper">
+  <form id="form" class="mt-3">
+        <input id="name" class="form-control mb-4" type="text" placeholder="name" autocomplete="off">
+        <textarea id="info" rows="8" cols="80" id="info" class="form-control mb-4" placeholder="info"></textarea>
+  </form>
+  <button id="submit" class="btn btn-dark">생성하기</button>
+</div>
+
+<script>
+  var csrftoken = getCookie('csrftoken');
+
+  function create(){
+    var name = document.getElementById('name').value
+    var info = document.getElementById('info').value
+
+    fetch('/api/archive/list', {
+      method: 'post',
+      headers: {
+        'Content-type':'application/json',
+        'X-CSRFToken': csrftoken
+      },
+      body: JSON.stringify({
+        'name': name,
+        'info': info
+      })
+    })
+    .then((resp) => {
+      console.log(resp)
+      window.location.href='/archive/list'
+    })
+    .catch(error => console.log(error))
+  }
+
+  var submitBtn = document.getElementById('submit')
+  submitBtn.addEventListener('click', create)
+</script>
+{% endblock %}

@@ -6,7 +6,10 @@ class ArchiveSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Archive
-        fields = ['id', 'name', 'info']
+        fields = ['id', 'name', 'info', 'user']
+        extra_kwargs = {
+            'user': {'read_only': True},
+        }
 
 
 class ImageSerializer(serializers.ModelSerializer):
@@ -14,7 +17,7 @@ class ImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Image
         fields = [
-            'id', 'original_name', 'info',
+            'id', 'original_name', 'image_source',
             'saved_name', 'saved_path', 'archive'
         ]
         extra_kwargs = {

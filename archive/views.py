@@ -6,8 +6,13 @@ from rest_framework import views, status, generics
 
 
 class ArchiveList(generics.ListCreateAPIView):
-    queryset = Archive.objects.all()
     serializer_class = ArchiveSerializer
+
+    def get_queryset(self):
+        return Archive.objects.filter(user=self.request.user)
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
 
 class ArchiveDetail(views.APIView):
@@ -24,7 +29,7 @@ class ArchiveDetail(views.APIView):
 
     def put(self, request, id):
         archive = self.get_one(id)
-        serializer = ArchiveSerializer(archive, data=request.data)
+        serializer = ArchiveSerializer(archive, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -37,8 +42,15 @@ class ArchiveDetail(views.APIView):
 
 
 class ImageList(generics.ListCreateAPIView):
-    queryset = Image.objects.all()
     serializer_class = ImageSerializer
+
+    def get_queryset(self):
+        archive = Archive.objects.get(pk=self.kwargs['archive_id'])
+        return Image.objects.filter(archive=archive)
+
+    def perform_create(self, serializer):
+        archive = Archive.objects.get(pk=self.kwargs['archive_id'])
+        serializer.save(archive=archive)
 
 
 class ImageDetail(views.APIView):
@@ -55,7 +67,7 @@ class ImageDetail(views.APIView):
 
     def put(self, request, id):
         image = self.get_one(id)
-        serializer = ImageSerializer(image, data=request.data)
+        serializer = ImageSerializer(image, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
