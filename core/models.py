@@ -3,6 +3,15 @@ from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, \
                                         PermissionsMixin
 from django.conf import settings
 
+import uuid, os
+
+
+def generate_file_path(instance, original_name):
+    extension = original_name.split('.')[-1]
+    filename = f'{uuid.uuid4()}.{extension}'
+
+    return os.path.join('images/', filename)
+
 
 class UserManager(BaseUserManager):
     def create_user(self, email, password, **extra_fields):
@@ -48,8 +57,7 @@ class Archive(models.Model):
 class Image(models.Model):
     original_name = models.CharField(max_length=255)
     image_source = models.CharField(max_length=255)
-    saved_name = models.CharField(max_length=255)
-    saved_path = models.CharField(max_length=255)
+    image = models.ImageField(null=True, upload_to=generate_file_path)
     created_at = models.DateTimeField(auto_now_add=True)
     archive = models.ForeignKey(
             Archive,

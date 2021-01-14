@@ -11,10 +11,11 @@ class LoginView(views.APIView):
 
     def post(self, request):
         serializer = LoginSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        user = serializer.validated_data['user']
-        login(request, user)
-        return Response(status=status.HTTP_200_OK)
+        if serializer.is_valid():
+            user = serializer.validated_data['user']
+            login(request, user)
+            return Response(status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class LogoutView(views.APIView):
@@ -44,11 +45,12 @@ class PasswordChangeView(generics.UpdateAPIView):
 
     def update(self, request):
         serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.change_password(
-            self.get_object(),
-            request.data['current_password'],
-            request.data['new_password']
-        )
-        data = {'success': '비밀번호가 성공적으로 변경되었습니다.'}
-        return Response(data=data, status=status.HTTP_200_OK)
+        if serializer.is_valid():
+            serializer.change_password(
+                self.get_object(),
+                request.data['current_password'],
+                request.data['new_password']
+            )
+            data = {'success': '비밀번호가 성공적으로 변경되었습니다.'}
+            return Response(data=data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
