@@ -6,4 +6,6 @@ img_array = process_image(image_path)
 
 model_path = './pneumonia_cnn.h5'
 predicted, prob = predict(model_path, img_array)
-print('predicted class: {} \nprobability: {}%'.format(predicted, prob))
+
+if __name__=='__main__':
+    print('predicted class: {} \nprobability: {}%'.format(predicted, prob))

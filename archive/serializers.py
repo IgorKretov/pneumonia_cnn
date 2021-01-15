@@ -17,10 +17,13 @@ class ImageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Image
-        fields = ['id', 'original_name', 'image_source', 'archive']
+        fields = [
+            'id', 'original_name', 'image_source',
+            'info', 'image', 'archive']
         extra_kwargs = {
             'id': {'read_only': True},
-            'archive': {'read_only': True}
+            'image': {'read_only': True},
+            'archive': {'read_only': True},
         }
 
 
@@ -31,4 +34,5 @@ class ImageUploadSerializer(serializers.ModelSerializer):
         fields = ('id', 'image')
         extra_kwargs = {
             'id': {'read_only': True},
+            'image': {'required': True}
         }

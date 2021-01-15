@@ -1,0 +1,130 @@
+{% extends "frontend/base.html" %}
+{% block b1 %}
+<h3>Image Card</h3>
+<div class="float-right">
+  <a class="btn btn-dark btn-lg mb-2" id="archive">Archive로</a>
+</div>
+<div id="form-wrapper">
+  <form class="mt-3">
+    <input id="original_name" class="form-control mb-4" type="text" autocomplete="off">
+    <input id="image-source" class="form-control mb-4" type="text" autocomplete="off">
+    <textarea id="info" rows="3" cols="80" class="form-control mb-4"></textarea>
+  </form>
+  <form class="mt-3">
+    <div class="form-group text-left" id="image-preview">
+      <div class="mb-2">이미지 보기</div>
+    </div>
+    <div class="form-group text-left mt-4">
+        <label for="file">새 이미지 파일 첨부</label>
+        <input type="file" class="form-control-file" id="file"/>
+    </div>
+  </form>
+  <div class="text-right">
+    <button id="update" class="btn btn-dark btn-lg mr-3">내용 수정하기</button>
+    <button id="upload" class="btn btn-dark btn-lg mr-3">파일 업로드</button>
+    <button id="delete" class="btn btn-dark btn-lg">삭제하기</button>
+  </div>
+</div>
+
+<script>
+  var csrftoken = getCookie('csrftoken');
+  var original_name = document.getElementById('original_name')
+  var image_source = document.getElementById('image-source')
+  var info = document.getElementById('info')
+  var image_preview = document.getElementById('image-preview')
+
+  function getDetail(){
+    var url = "/api/archive/image_detail/{{image_id}}/"
+
+    fetch(url, {
+      method: 'get',
+      headers: {
+        'Content-type':'application/json'
+      }
+    })
+    .then((resp) => resp.json())
+    .then((data) => {
+      console.log('data: ', data)
+      original_name.value = data['original_name']
+      image_source.value = data['image_source']
+      info.value = data['info']
+
+      if (data['image'] != null) {
+        image_preview.innerHTML += `<img src=${data['image']} height=200>`
+      } else {
+        image_preview.innerHTML += `<ul><li>No Image</li></ul>`
+      }
+    })
+  }
+
+  getDetail()
+
+  function update(){
+    var url = "/api/archive/image_detail/{{image_id}}/"
+
+    fetch(url, {
+      method: 'put',
+      headers: {
+        'Content-type':'application/json',
+        'X-CSRFToken': csrftoken
+      },
+      body: JSON.stringify({
+        'original_name': original_name.value,
+        'image_source': image_source.value,
+        'info': info.value
+      })
+    })
+    .then((resp) => {
+      console.log(resp)
+    })
+    .catch(error => console.log(error))
+  }
+  var update_button = document.getElementById('update')
+  update_button.addEventListener('click', update)
+
+  function upload(){
+    const url = "/api/archive/image_detail/upload_image/{{image_id}}/"
+    const file_input = document.getElementById('file')
+    var data = new FormData()
+    data.append('image', file_input.files[0])
+
+    fetch(url, {
+      method: 'put',
+      headers: {
+        'X-CSRFToken': csrftoken
+      },
+      body: data
+    })
+    .then((resp) => {
+      console.log(resp)
+      window.location.href=""
+    })
+    .catch(error => console.log(error))
+  }
+  var upload_button = document.getElementById('upload')
+  upload_button.addEventListener('click', upload)
+
+  function delete_call(){
+    var url = "/api/archive/image_detail/{{image_id}}/"
+    fetch(url, {
+      method: 'delete',
+      headers: {
+        'Content-type':'application/json',
+        'X-CSRFToken': csrftoken
+      },
+    })
+    .then((resp) => {
+      console.log(resp)
+      window.history.back()
+    })
+    .catch(error => console.log(error))
+  }
+  var delete_button = document.getElementById('delete')
+  delete_button.addEventListener('click', delete_call)
+
+  var archive_button = document.getElementById('archive')
+  archive_button.addEventListener('click', function(){
+    window.history.back()
+  })
+</script>
+{% endblock %}

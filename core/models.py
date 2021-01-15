@@ -57,6 +57,7 @@ class Archive(models.Model):
 class Image(models.Model):
     original_name = models.CharField(max_length=255)
     image_source = models.CharField(max_length=255)
+    info = models.CharField(max_length=255)
     image = models.ImageField(null=True, upload_to=generate_file_path)
     created_at = models.DateTimeField(auto_now_add=True)
     archive = models.ForeignKey(

@@ -6,7 +6,7 @@
     <input id="email" class="form-control mb-4" type="text" placeholder="email" autocomplete="off">
     <input id="password" class="form-control mb-4" type="password"placeholder="password">
   </form>
-  <button id="submit" class="btn btn-dark">로그인</button>
+  <button id="login" class="btn btn-dark btn-lg">로그인</button>
 </div>
 
 <script>
@@ -35,7 +35,7 @@
     .catch(error => console.log(error))
   }
 
-  var submitBtn = document.getElementById('submit')
-  submitBtn.addEventListener('click', login)
+  var login_button = document.getElementById('login')
+  login_button.addEventListener('click', login)
 </script>
 {% endblock %}

@@ -1,6 +1,13 @@
 {% extends "frontend/base.html" %}
 {% block b1 %}
 <h3>Archive Images</h3>
+<div class="text-right">
+  <a class="btn btn-dark btn-lg mb-3 mr-2" href="/archive/list">Archive 리스트</a>
+  <a class="btn btn-dark btn-lg mb-3" href="/archive/detail/{{archive_id}}">Archive 수정</a>
+</div>
+<div class="float-right">
+  <a class="btn btn-dark btn-lg" href="/archive/image_create/{{archive_id}}">Image Card 생성</a>
+</div>
 {% endblock %}
 {% block b2 %}
 
@@ -9,9 +16,7 @@
 
 <script>
   var list = document.getElementById("image-list")
-  var url_to_list = window.location.href.split('/')
-  var archive_id = url_to_list[url_to_list.length-2]
-  var url = '/api/archive/image_list/' + archive_id
+  var url = "/api/archive/image_list/{{archive_id}}/"
 
   function getImageList(){
     fetch(url, {
@@ -25,21 +30,23 @@
       console.log('data: ', data)
 
       for (var index in data) {
+        var id = data[index]['id']
         var original_name = data[index]['original_name']
         var image_source = data[index]['image_source']
+        var image = data[index]['image']
 
-        var image = `
+        var card = `
           <div class="col">
-            <div class="card border-dark mb-3" style="max-width: 18rem;">
-              <div class="card-header">${parseInt(index) + 1}</div>
+            <div class="card h-100">
+              <img src=${image} height=200>
               <div class="card-body text-dark">
-                <h5 class="card-title"><a href="/archive/">${original_name}</a></h5>
+                <h5 class="card-title"><a href="/archive/image_detail/${id}">${original_name}</a></h5>
                 <p class="card-text">${image_source}</p>
               </div>
             </div>
           </div>
         `
-        list.innerHTML += image
+        list.innerHTML += card
         }
     })
     .catch(error => console.log(error))

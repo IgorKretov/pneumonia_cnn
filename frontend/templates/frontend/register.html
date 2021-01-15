@@ -1,14 +1,14 @@
 {% extends "frontend/base.html" %}
 {% block b1 %}
 <h3>회원 가입 페이지</h3>
-<div id="form-wrapper">
+<div class="form-wrapper">
   <form id="form" class="mt-5">
         <input id="email" class="form-control mb-4" type="text" placeholder="email" autocomplete="off">
         <input id="password" class="form-control mb-4" type="password"  placeholder="password" autocomplete="off">
         <input id="name" class="form-control mb-4" type="text" placeholder="name" autocomplete="off">
         <input id="address" class="form-control mb-4" type="text" placeholder="address" autocomplete="off">
   </form>
-  <button id="submit" class="btn btn-dark">회원가입</button>
+  <button id="register" class="btn btn-dark btn-lg">회원가입</button>
 </div>
 
 <script>
@@ -40,7 +40,7 @@
     .catch(error => console.log(error))
   }
 
-  var submitBtn = document.getElementById('submit')
-  submitBtn.addEventListener('click', register)
+  var register_button = document.getElementById('register')
+  register_button.addEventListener('click', register)
 </script>
 {% endblock %}

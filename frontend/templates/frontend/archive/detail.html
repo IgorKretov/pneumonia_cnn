@@ -1,0 +1,80 @@
+{% extends "frontend/base.html" %}
+{% block b1 %}
+<h3>Archive 수정</h3>
+<div class="text-right">
+  <a class="btn btn-dark btn-lg" href="/archive/{{archive_id}}">Archive Images</a>
+</div>
+<div id="form-wrapper">
+  <form class="mt-3">
+    <input id="name" class="form-control mb-4" type="text" autocomplete="off">
+    <textarea id="info" rows="8" cols="80" class="form-control mb-4"></textarea>
+  </form>
+  <div class="text-right">
+    <button id="update" class="btn btn-dark btn-lg mr-3">수정하기</button>
+    <button id="delete" class="btn btn-dark btn-lg">삭제하기</button>
+  </div>
+</div>
+
+<script>
+  var csrftoken = getCookie('csrftoken');
+  var input_name = document.getElementById('name')
+  var info = document.getElementById('info')
+
+  function getDetail(){
+    var url = "/api/archive/detail/{{archive_id}}/"
+    fetch(url, {
+      method: 'get',
+      headers: {
+        'Content-type':'application/json'
+      }
+    })
+    .then((resp) => resp.json())
+    .then((data) => {
+      console.log('data: ', data)
+      input_name.value = data['name']
+      info.value = data['info']
+    })
+  }
+
+  getDetail()
+
+  function update(){
+    var url = "/api/archive/detail/{{archive_id}}/"
+    fetch(url, {
+      method: 'put',
+      headers: {
+        'Content-type':'application/json',
+        'X-CSRFToken': csrftoken
+      },
+      body: JSON.stringify({
+        'name': input_name.value,
+        'info': info.value
+      })
+    })
+    .then((resp) => {
+      console.log(resp)
+    })
+    .catch(error => console.log(error))
+  }
+  var update_button = document.getElementById('update')
+  update_button.addEventListener('click', update)
+
+  function delete_call(){
+    var url = "/api/archive/detail/{{archive_id}}/"
+    fetch(url, {
+      method: 'delete',
+      headers: {
+        'Content-type':'application/json',
+        'X-CSRFToken': csrftoken
+      },
+    })
+    .then((resp) => {
+      console.log(resp)
+      window.location.href='/archive/list'
+    })
+    .catch(error => console.log(error))
+  }
+  var delete_button = document.getElementById('delete')
+  delete_button.addEventListener('click', delete_call)
+</script>
+{% endblock %}
