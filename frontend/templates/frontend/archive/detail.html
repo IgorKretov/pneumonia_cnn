@@ -20,8 +20,16 @@
   var input_name = document.getElementById('name')
   var info = document.getElementById('info')
 
+  var update_button = document.getElementById('update')
+  update_button.addEventListener('click', update)
+
+  var delete_button = document.getElementById('delete')
+  delete_button.addEventListener('click', delete_call)
+
+  getDetail()
+
   function getDetail(){
-    var url = "/api/archive/detail/{{archive_id}}/"
+    const url = "/api/archive/detail/{{archive_id}}/"
     fetch(url, {
       method: 'get',
       headers: {
@@ -36,10 +44,8 @@
     })
   }
 
-  getDetail()
-
   function update(){
-    var url = "/api/archive/detail/{{archive_id}}/"
+    const url = "/api/archive/detail/{{archive_id}}/"
     fetch(url, {
       method: 'put',
       headers: {
@@ -56,8 +62,6 @@
     })
     .catch(error => console.log(error))
   }
-  var update_button = document.getElementById('update')
-  update_button.addEventListener('click', update)
 
   function delete_call(){
     var url = "/api/archive/detail/{{archive_id}}/"
@@ -74,7 +78,5 @@
     })
     .catch(error => console.log(error))
   }
-  var delete_button = document.getElementById('delete')
-  delete_button.addEventListener('click', delete_call)
 </script>
 {% endblock %}

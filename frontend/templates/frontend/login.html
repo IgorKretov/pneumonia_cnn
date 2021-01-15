@@ -11,12 +11,14 @@
 
 <script>
   var csrftoken = getCookie('csrftoken');
+  var email = document.getElementById('email').value
+  var password = document.getElementById('password').value
+
+  var login_button = document.getElementById('login')
+  login_button.addEventListener('click', login)
 
   function login(){
-    var email = document.getElementById('email').value
-    var password = document.getElementById('password').value
-
-    var url = '/api/user/login'
+    var url = "/api/user/login"
     fetch(url, {
       method: 'post',
       headers: {
@@ -34,8 +36,5 @@
     })
     .catch(error => console.log(error))
   }
-
-  var login_button = document.getElementById('login')
-  login_button.addEventListener('click', login)
 </script>
 {% endblock %}

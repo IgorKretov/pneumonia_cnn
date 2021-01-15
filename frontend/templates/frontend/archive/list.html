@@ -9,8 +9,11 @@
 <script>
   var list = document.getElementById("archive-list")
 
+  buildList()
+
   function buildList(){
-    fetch('/api/archive/list', {
+    const url = "/api/archive/list"
+    fetch(url, {
       method: 'get',
       headers: {
         'Content-type':'application/json'
@@ -41,7 +44,5 @@
     })
     .catch(error => console.log(error))
   }
-
-  buildList()
 </script>
 {% endblock %}

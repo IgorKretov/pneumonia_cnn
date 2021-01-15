@@ -16,9 +16,11 @@
 
 <script>
   var list = document.getElementById("image-list")
-  var url = "/api/archive/image_list/{{archive_id}}/"
+
+  getImageList()
 
   function getImageList(){
+    const url = "/api/archive/image_list/{{archive_id}}/"
     fetch(url, {
       method: 'get',
       headers: {
@@ -31,8 +33,8 @@
 
       for (var index in data) {
         var id = data[index]['id']
-        var original_name = data[index]['original_name']
-        var image_source = data[index]['image_source']
+        var name = data[index]['name']
+        var info = data[index]['info']
         var image = data[index]['image']
 
         var card = `
@@ -40,8 +42,8 @@
             <div class="card h-100">
               <img src=${image} height=200>
               <div class="card-body text-dark">
-                <h5 class="card-title"><a href="/archive/image_detail/${id}">${original_name}</a></h5>
-                <p class="card-text">${image_source}</p>
+                <h5 class="card-title"><a href="/archive/image_detail/${id}">${name}</a></h5>
+                <p class="card-text">${info}</p>
               </div>
             </div>
           </div>
@@ -51,7 +53,5 @@
     })
     .catch(error => console.log(error))
   }
-
-  getImageList()
 </script>
 {% endblock %}

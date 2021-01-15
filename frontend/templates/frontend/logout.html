@@ -9,10 +9,11 @@
 <script>
   var csrftoken = getCookie('csrftoken');
 
-  function logout(){
-    console.log('로그아웃 클릭')
+  var logout_button = document.getElementById('logout')
+  logout_button.addEventListener('click', logout)
 
-    var url = '/api/user/logout'
+  function logout(){
+    const url = "/api/user/logout"
     fetch(url, {
       method: 'post',
       headers: {
@@ -26,8 +27,5 @@
     })
     .catch(error => console.log(error))
   }
-
-  var logout_button = document.getElementById('logout')
-  logout_button.addEventListener('click', logout)
 </script>
 {% endblock %}

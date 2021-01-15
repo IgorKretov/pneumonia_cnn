@@ -6,36 +6,58 @@
 </div>
 <div id="form-wrapper">
   <form class="mt-3">
-    <input id="original_name" class="form-control mb-4" type="text" autocomplete="off">
-    <input id="image-source" class="form-control mb-4" type="text" autocomplete="off">
-    <textarea id="info" rows="3" cols="80" class="form-control mb-4"></textarea>
+    <input id="name" class="form-control mb-4" type="text" autocomplete="off">
+    <textarea id="info" rows="3" cols="80" class="form-control mb-3"></textarea>
   </form>
   <form class="mt-3">
-    <div class="form-group text-left" id="image-preview">
-      <div class="mb-2">이미지 보기</div>
+    <div class="text-left mb-1">
+      새 이미지 첨부
     </div>
-    <div class="form-group text-left mt-4">
-        <label for="file">새 이미지 파일 첨부</label>
+    <div class="form-group float-left">
         <input type="file" class="form-control-file" id="file"/>
+    </div>
+    <div class="form-group text-right" id="image-preview">
+    </div>
+    <div class="text-right mb-3" id="prediction-container">
     </div>
   </form>
   <div class="text-right">
-    <button id="update" class="btn btn-dark btn-lg mr-3">내용 수정하기</button>
-    <button id="upload" class="btn btn-dark btn-lg mr-3">파일 업로드</button>
+    <button id="predict" class="btn btn-success btn-lg mr-2">폐렴 여부 예측</button>
+    <button id="update" class="btn btn-dark btn-lg mr-2">내용 수정하기</button>
+    <button id="upload" class="btn btn-dark btn-lg mr-2">파일 업로드</button>
     <button id="delete" class="btn btn-dark btn-lg">삭제하기</button>
   </div>
 </div>
 
 <script>
   var csrftoken = getCookie('csrftoken');
-  var original_name = document.getElementById('original_name')
-  var image_source = document.getElementById('image-source')
+  var name_input = document.getElementById('name')
   var info = document.getElementById('info')
   var image_preview = document.getElementById('image-preview')
+  var prediction = document.getElementById('prediction-container')
+
+  var update_button = document.getElementById('update')
+  update_button.addEventListener('click', update)
+
+  var upload_button = document.getElementById('upload')
+  upload_button.addEventListener('click', upload)
+
+  var delete_button = document.getElementById('delete')
+  delete_button.addEventListener('click', delete_call)
+
+  var predict_button = document.getElementById('predict')
+  predict_button.addEventListener('click', predict)
+
+  var archive_button = document.getElementById('archive')
+  var archive_id = ""
+  archive_button.addEventListener('click', function(){
+    window.location.href = "/archive/" + archive_id
+  })
+
+  getDetail()
 
   function getDetail(){
-    var url = "/api/archive/image_detail/{{image_id}}/"
-
+    const url = "/api/archive/image_detail/{{image_id}}/"
     fetch(url, {
       method: 'get',
       headers: {
@@ -45,23 +67,32 @@
     .then((resp) => resp.json())
     .then((data) => {
       console.log('data: ', data)
-      original_name.value = data['original_name']
-      image_source.value = data['image_source']
+      name_input.value = data['name']
       info.value = data['info']
 
       if (data['image'] != null) {
-        image_preview.innerHTML += `<img src=${data['image']} height=200>`
+        image_preview.innerHTML += `<img src=${data['image']} height=250>`
       } else {
         image_preview.innerHTML += `<ul><li>No Image</li></ul>`
+      }
+
+      archive_id = data['archive']
+
+      var predicted_class = data['predicted_class']
+      var predicted_value = data['predicted_value']
+      if (predicted_class != null) {
+        console.log(predicted_class, predicted_value)
+        prediction.innerHTML += `
+          <button class="btn btn-success btn-lg">
+            예측 결과: &nbsp ${predicted_class} &nbsp ${predicted_value}%
+          </button>
+        `
       }
     })
   }
 
-  getDetail()
-
   function update(){
-    var url = "/api/archive/image_detail/{{image_id}}/"
-
+    const url = "/api/archive/image_detail/{{image_id}}/"
     fetch(url, {
       method: 'put',
       headers: {
@@ -79,15 +110,12 @@
     })
     .catch(error => console.log(error))
   }
-  var update_button = document.getElementById('update')
-  update_button.addEventListener('click', update)
 
   function upload(){
     const url = "/api/archive/image_detail/upload_image/{{image_id}}/"
     const file_input = document.getElementById('file')
     var data = new FormData()
     data.append('image', file_input.files[0])
-
     fetch(url, {
       method: 'put',
       headers: {
@@ -101,11 +129,9 @@
     })
     .catch(error => console.log(error))
   }
-  var upload_button = document.getElementById('upload')
-  upload_button.addEventListener('click', upload)
 
   function delete_call(){
-    var url = "/api/archive/image_detail/{{image_id}}/"
+    const url = "/api/archive/image_detail/{{image_id}}/"
     fetch(url, {
       method: 'delete',
       headers: {
@@ -115,16 +141,25 @@
     })
     .then((resp) => {
       console.log(resp)
-      window.history.back()
+      window.location.href = "/archive/" + archive_id
     })
     .catch(error => console.log(error))
   }
-  var delete_button = document.getElementById('delete')
-  delete_button.addEventListener('click', delete_call)
 
-  var archive_button = document.getElementById('archive')
-  archive_button.addEventListener('click', function(){
-    window.history.back()
-  })
+  function predict(){
+    const url = "/api/archive/image_detail/predict/{{image_id}}/"
+    fetch(url, {
+      method: 'put',
+      headers: {
+        'Content-type':'application/json',
+        'X-CSRFToken': csrftoken
+      },
+    })
+    .then((resp) => {
+      console.log(resp)
+      window.location.href=""
+    })
+    .catch(error => console.log(error))
+  }
 </script>
 {% endblock %}

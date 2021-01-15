@@ -1,6 +1,6 @@
 from core.models import Archive, Image
 from archive.serializers import ArchiveSerializer, ImageSerializer, \
-                                ImageUploadSerializer
+                                ImageUploadSerializer, ImagePredictionSerializer
 from django.http import Http404
 from rest_framework.response import Response
 from rest_framework import views, status, viewsets, generics
@@ -82,6 +82,18 @@ class ImageDetail(views.APIView):
 
 class ImageUploadViewSet(viewsets.ViewSet):
     serializer_class = ImageUploadSerializer
+
+    def update(self, request, id):
+        image = Image.objects.get(pk=id)
+        serializer = self.serializer_class(image, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ImagePredictionViewSet(viewsets.ViewSet):
+    serializer_class = ImagePredictionSerializer
 
     def update(self, request, id):
         image = Image.objects.get(pk=id)

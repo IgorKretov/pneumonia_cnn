@@ -11,12 +11,15 @@
 
 <script>
   var csrftoken = getCookie('csrftoken');
+  var name = document.getElementById('name').value
+  var info = document.getElementById('info').value
+
+  var create_button = document.getElementById('create')
+  create_button.addEventListener('click', create)
 
   function create(){
-    var name = document.getElementById('name').value
-    var info = document.getElementById('info').value
-
-    fetch('/api/archive/list', {
+    const url = "/api/archive/list"
+    fetch(url, {
       method: 'post',
       headers: {
         'Content-type':'application/json',
@@ -33,8 +36,5 @@
     })
     .catch(error => console.log(error))
   }
-
-  var create_button = document.getElementById('create')
-  create_button.addEventListener('click', create)
 </script>
 {% endblock %}

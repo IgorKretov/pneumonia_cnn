@@ -13,14 +13,17 @@
 
 <script>
   var csrftoken = getCookie('csrftoken');
+  var email = document.getElementById('email').value
+  var password = document.getElementById('password').value
+  var name = document.getElementById('name').value
+  var address = document.getElementById('address').value
+
+  var register_button = document.getElementById('register')
+  register_button.addEventListener('click', register)
 
   function register(){
-    var email = document.getElementById('email').value
-    var password = document.getElementById('password').value
-    var name = document.getElementById('name').value
-    var address = document.getElementById('address').value
-
-    fetch('/api/user/register', {
+    const url = "/api/user/register"
+    fetch(url, {
       method: 'post',
       headers: {
         'Content-type':'application/json',
@@ -39,8 +42,5 @@
     })
     .catch(error => console.log(error))
   }
-
-  var register_button = document.getElementById('register')
-  register_button.addEventListener('click', register)
 </script>
 {% endblock %}
