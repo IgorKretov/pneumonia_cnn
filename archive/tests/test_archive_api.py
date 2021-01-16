@@ -13,8 +13,9 @@ ARCHIVE_LIST_URL = reverse('archive:list')
 
 
 def archive_detail_url(archive_id):
-    """Return URL for archive detail."""
+    """Return URL for showing the detail information of an archive."""
     return reverse('archive:detail', args=[archive_id])
+
 
 def create_user(**params):
     """Create and return a new user."""
@@ -66,7 +67,7 @@ class ArchiveTests(TestCase):
 
         response = self.client.get(archive_detail_url(archive.id))
 
-        archives = Archive.objects.get(pk=archive.id)
+        archive = Archive.objects.get(pk=archive.id)
         serializer = ArchiveSerializer(archive)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -86,7 +87,7 @@ class ArchiveTests(TestCase):
         }
 
         response = self.client.put(archive_detail_url(archive.id), data)
-        archive = Archive.objects.get(pk=archive.id)
+        archive.refresh_from_db()
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(archive.name, data['name'])

@@ -5,5 +5,5 @@ mysqlclient
 Pillow
 opencv-python
 seaborn
-tensorflow
+tensorflow==2.4.0
 flake8

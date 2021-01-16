@@ -79,8 +79,9 @@ class ImageDetail(views.APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, id):
-        image = self.get_one(id)
-        image.delete()
+        image_instance = self.get_one(id)
+        image_instance.image.delete()
+        image_instance.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
@@ -88,9 +89,13 @@ class ImageUploadViewSet(viewsets.ViewSet):
     serializer_class = ImageUploadSerializer
 
     def update(self, request, id):
-        image = Image.objects.get(pk=id)
-        serializer = self.serializer_class(image, data=request.data)
+        image_instance = Image.objects.get(pk=id)
+        serializer = self.serializer_class(image_instance, data=request.data)
         if serializer.is_valid():
+            if image_instance.image:
+                image_instance.image.delete()
+                image_instance.predicted_class = None
+                image_instance.predicted_value = None
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

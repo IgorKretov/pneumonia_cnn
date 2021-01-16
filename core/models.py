@@ -3,7 +3,8 @@ from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, \
                                         PermissionsMixin
 from django.conf import settings
 
-import uuid, os
+import uuid
+import os
 
 
 def generate_file_path(instance, original_name):

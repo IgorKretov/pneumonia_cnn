@@ -1,8 +1,6 @@
 import cv2
 import numpy as np
-import glob
 from tensorflow.keras.models import load_model
-import sys
 
 
 def process_image(image_path):
@@ -12,6 +10,7 @@ def process_image(image_path):
     img = img/255.0
     img = np.reshape(img, (1, 196, 196, 1))
     return img
+
 
 def predict(model_path, img_array):
     loaded_model = load_model(model_path)

@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from core import models
-from tf_model.model_serving import process_image, predict
-from app.settings import BASE_DIR, CNN_MODEL_PATH
+from cnn_model.model_serving import process_image, predict
+from app.settings import CNN_MODEL_PATH
 
 
 class ArchiveSerializer(serializers.ModelSerializer):
@@ -49,8 +49,7 @@ class ImagePredictionSerializer(serializers.ModelSerializer):
         }
 
     def update(self, instance, validated_data):
-        image_path = BASE_DIR + instance.image.url.replace('/', '\\')
-        image_array = process_image(image_path)
+        image_array = process_image(instance.image.path)
         predicted_class, predicted_value = predict(CNN_MODEL_PATH, image_array)
         validated_data['predicted_class'] = predicted_class
         validated_data['predicted_value'] = predicted_value
