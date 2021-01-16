@@ -1,6 +1,7 @@
 from core.models import Archive, Image
 from archive.serializers import ArchiveSerializer, ImageSerializer, \
-                                ImageUploadSerializer, ImagePredictionSerializer
+                                ImageUploadSerializer, \
+                                ImagePredictionSerializer
 from django.http import Http404
 from rest_framework.response import Response
 from rest_framework import views, status, viewsets, generics
@@ -30,7 +31,10 @@ class ArchiveDetail(views.APIView):
 
     def put(self, request, id):
         archive = self.get_one(id)
-        serializer = ArchiveSerializer(archive, data=request.data, partial=True)
+        serializer = ArchiveSerializer(
+            archive,
+            data=request.data,
+            partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)

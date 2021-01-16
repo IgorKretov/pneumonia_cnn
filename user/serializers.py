@@ -9,10 +9,14 @@ class LoginSerializer(serializers.Serializer):
     )
 
     def validate(self, attrs):
-        user = authenticate(username=attrs['email'], password=attrs['password'])
+        user = authenticate(
+            username=attrs['email'],
+            password=attrs['password'])
 
         if not user:
-            raise serializers.ValidationError('이메일 또는 비밀번호가 틀렸습니다.')
+            raise serializers.ValidationError(
+                '이메일 또는 비밀번호가 틀렸습니다.'
+            )
 
         return {'user': user}
 
@@ -28,7 +32,7 @@ class UserSerializer(serializers.ModelSerializer):
                 'style': {'input_type': 'password'},
                 'min_length': 6,
             },
-            'name' : {'required': True}
+            'name': {'required': True}
         }
 
     def create(self, validated_data):
@@ -42,7 +46,7 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         fields = ('email', 'name', 'address')
         extra_kwargs = {
             'email': {'read_only': True},
-            'name' : {'required': True}
+            'name': {'required': True}
         }
 
     def update(self, instance, validated_data):
