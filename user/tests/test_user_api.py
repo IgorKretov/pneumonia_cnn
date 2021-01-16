@@ -18,7 +18,7 @@ def create_user(**params):
     return get_user_model().objects.create_user(**params)
 
 
-class PublicUserApiTest(TestCase):
+class PublicUserApiTests(TestCase):
 
     def setUp(self):
         """Setting up a APIClient."""
@@ -91,44 +91,11 @@ class PublicUserApiTest(TestCase):
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-    def test_logout(self):
-        """Trying to logout with a logged-in user succeeds."""
-        data = {
-            'email': 'test@gmail.com',
-            'password': 'password'
-        }
-        create_user(**data)
-        self.client.login(**data)
-
-        response = self.client.post(LOGOUT_USER_URL)
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(
-            response.data['success'],
-            '성공적으로 로그아웃 되었습니다.'
-        )
-
     def test_logout_no_validation(self):
         """Trying to logout without a logged-in user is forbidden."""
         response = self.client.post(LOGOUT_USER_URL)
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
-    def test_user_profile(self):
-        """Retrieving a user profile succeeds."""
-        data = {
-            'email': 'test@gmail.com',
-            'password': 'password',
-            'name': '김철수',
-            'address': '서울시 서초구'
-        }
-        create_user(**data)
-        self.client.login(**data)
-        response = self.client.get(PROFILE_USER_URL)
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['name'], data['name'])
-        self.assertEqual(response.data['address'], data['address'])
 
     def test_user_profile_no_validation(self):
         """Retrieving a user profile without login is forbidden."""
@@ -141,14 +108,39 @@ class PublicUserApiTest(TestCase):
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
+
+class ValidatedUserApiTests(TestCase):
+
+    def setUp(self):
+        self.user = create_user(
+            email='test@gmail.com',
+            password='password',
+            name='김철수',
+            address='서울시 서초구'
+        )
+        self.client = APIClient()
+        self.client.login(email='test@gmail.com', password='password')
+
+    def test_logout(self):
+        """Trying to logout with a logged-in user succeeds."""
+        response = self.client.post(LOGOUT_USER_URL)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(
+            response.data['success'],
+            '성공적으로 로그아웃 되었습니다.'
+        )
+
+    def test_user_profile(self):
+        """Retrieving a user profile succeeds."""
+        response = self.client.get(PROFILE_USER_URL)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['name'], self.user.name)
+        self.assertEqual(response.data['address'], self.user.address)
+
     def test_user_profile_update(self):
         """Test updating a user profile."""
-        data = {
-            'email': 'test@gmail.com',
-            'password': 'password'
-        }
-        create_user(**data)
-        self.client.login(**data)
         new_data = {
             'name': '박지민',
             'address': '서울시 구로구'
@@ -162,31 +154,19 @@ class PublicUserApiTest(TestCase):
 
     def test_password_change(self):
         """Test changing the password of a user."""
-        data = {
-            'email': 'test@gmail.com',
-            'password': 'password'
-        }
-        created_user = create_user(**data)
-        self.client.login(**data)
         new_data = {
             'current_password': 'password',
             'new_password': 'revised_password'
         }
 
         response = self.client.put(PASSWORD_CHANGE_USER_URL, new_data)
-        user = get_user_model().objects.get(pk=created_user.id)
+        user = get_user_model().objects.get(pk=self.user.id)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTrue(user.check_password(new_data['new_password']))
 
     def test_password_change_fail(self):
         """Test changing the password with the wrong current password."""
-        data = {
-            'email': 'test@gmail.com',
-            'password': 'password'
-        }
-        create_user(**data)
-        self.client.login(**data)
         new_data = {
             'current_password': 'wrong_password',
             'new_password': 'revised_password'
