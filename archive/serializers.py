@@ -49,6 +49,10 @@ class ImagePredictionSerializer(serializers.ModelSerializer):
         }
 
     def update(self, instance, validated_data):
+        """Process a given image and predict the probability of pneumonia.
+        The result is saved as predicted_class and predicted_value fields
+        of the given image instace.
+        """ 
         image_array = process_image(instance.image.path)
         predicted_class, predicted_value = predict(CNN_MODEL_PATH, image_array)
         validated_data['predicted_class'] = predicted_class

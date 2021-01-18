@@ -8,6 +8,9 @@ from rest_framework import views, status, viewsets, generics
 
 
 class ArchiveList(generics.ListCreateAPIView):
+    """APIView for creating an archive
+    or listing archives which belong to a user
+    """
     serializer_class = ArchiveSerializer
 
     def get_queryset(self):
@@ -18,6 +21,9 @@ class ArchiveList(generics.ListCreateAPIView):
 
 
 class ArchiveDetail(views.APIView):
+    """APIView for archive detail
+    This has get, update, and delete functions for an archive.
+    """
     def get_one(self, id):
         try:
             return Archive.objects.get(pk=id)
@@ -47,6 +53,9 @@ class ArchiveDetail(views.APIView):
 
 
 class ImageList(generics.ListCreateAPIView):
+    """APIView for creating an Image
+    or listing images which belong to an archive
+    """
     serializer_class = ImageSerializer
 
     def get_queryset(self):
@@ -59,6 +68,9 @@ class ImageList(generics.ListCreateAPIView):
 
 
 class ImageDetail(views.APIView):
+    """APIView for image detail
+    This has get, update, and delete functions for an image.
+    """
     def get_one(self, id):
         try:
             return Image.objects.get(pk=id)
@@ -86,6 +98,9 @@ class ImageDetail(views.APIView):
 
 
 class ImageUploadViewSet(viewsets.ViewSet):
+    """ViewSet for uploading an image file
+    Uploaded image becomes a ImageField of an image instance.
+    """
     serializer_class = ImageUploadSerializer
 
     def update(self, request, id):
@@ -102,6 +117,9 @@ class ImageUploadViewSet(viewsets.ViewSet):
 
 
 class ImagePredictionViewSet(viewsets.ViewSet):
+    """Viewset for predicting the probability of pneumonia for a given image
+    Predicted class and predicted value become fields of an image instance.
+    """ 
     serializer_class = ImagePredictionSerializer
 
     def update(self, request, id):

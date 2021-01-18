@@ -9,6 +9,7 @@ class LoginSerializer(serializers.Serializer):
     )
 
     def validate(self, attrs):
+        """Validate username and password for login"""
         user = authenticate(
             username=attrs['email'],
             password=attrs['password'])
@@ -67,10 +68,12 @@ class PasswordChangeSerializer(serializers.Serializer):
     )
 
     def check_current_password(self, user, current_password):
+        """Check the current password for the logged-in user"""
         if not user.check_password(current_password):
             raise serializers.ValidationError('현재 비밀번호가 일치하지 않습니다.')
 
     def change_password(self, user, current_password, new_password):
+        """Change the password after checking the current password"""
         self.check_current_password(user, current_password)
         user.set_password(new_password)
         user.save()

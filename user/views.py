@@ -6,6 +6,7 @@ from rest_framework.response import Response
 
 
 class LoginView(views.APIView):
+    """APIView for user login"""
     serializer_class = LoginSerializer
     permission_classes = (permissions.AllowAny,)
 
@@ -19,6 +20,7 @@ class LoginView(views.APIView):
 
 
 class LogoutView(views.APIView):
+    """APIView for user logout"""
     def post(self, request):
         logout(request)
         data = {'success': '성공적으로 로그아웃 되었습니다.'}
@@ -26,11 +28,13 @@ class LogoutView(views.APIView):
 
 
 class RegisterView(generics.CreateAPIView):
+    """APIView for registering a new user"""
     serializer_class = UserSerializer
     permission_classes = (permissions.AllowAny,)
 
 
 class UserView(generics.RetrieveUpdateAPIView):
+    """APIView for user detail"""
     serializer_class = UserUpdateSerializer
 
     def get_object(self):
@@ -38,6 +42,7 @@ class UserView(generics.RetrieveUpdateAPIView):
 
 
 class PasswordChangeView(generics.UpdateAPIView):
+    """APIView for changing the password of a user"""
     serializer_class = PasswordChangeSerializer
 
     def get_object(self):
