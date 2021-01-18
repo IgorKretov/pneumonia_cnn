@@ -2,7 +2,9 @@
 {% block b1 %}
 <h3>Archive Images</h3>
 <div class="text-right">
-  <a class="btn btn-dark btn-lg mb-3 mr-2" href="/archive/list">Archive 리스트</a>
+  <a class="btn btn-dark btn-lg mb-3" href="/archive/list">Archive 리스트</a>
+</div>
+<div class="text-right">
   <a class="btn btn-dark btn-lg mb-3" href="/archive/detail/{{archive_id}}">Archive 수정</a>
 </div>
 <div class="float-right">
@@ -36,19 +38,39 @@
         var name = data[index]['name']
         var info = data[index]['info']
         var image = data[index]['image']
-
-        var card = `
-          <div class="col">
-            <div class="card h-100">
-              <img src=${image} height=200>
-              <div class="card-body text-dark">
-                <h5 class="card-title"><a href="/archive/image_detail/${id}">${name}</a></h5>
-                <p class="card-text">${info}</p>
+        var predicted_class = data[index]['predicted_class']
+        var predicted_value = data[index]['predicted_value']
+        if (image != null) {
+          var card = `
+            <div class="col">
+              <div class="card h-100">
+                <img src=${image} height=200 alt="이미지 업로드 필요">
+                <div class="card-body text-dark">
+                  <h5 class="card-title"><a href="/archive/image_detail/${id}">${name}</a></h5>
+                  <p class="card-text">${info}</p>
+                  <p class="card-text">예측 결과: ${predicted_class} ${predicted_value}%</p>
+                </div>
               </div>
             </div>
-          </div>
-        `
-        list.innerHTML += card
+          `
+          list.innerHTML += card
+        }
+        else {
+          var card = `
+            <div class="col">
+              <div class="card h-100">
+                <p class="text-center mt-5">이미지를 업로드하세요.</p>
+                <div class="card-body text-dark">
+                  <h5 class="card-title"><a href="/archive/image_detail/${id}">${name}</a></h5>
+                  <p class="card-text">${info}</p>
+                  <p class="card-text">${predicted_class}</p>
+                  <p class="card-text">${predicted_value}</p>
+                </div>
+              </div>
+            </div>
+          `
+          list.innerHTML += card
+        }
         }
     })
     .catch(error => console.log(error))

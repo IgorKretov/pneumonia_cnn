@@ -1,0 +1,86 @@
+{% extends "frontend/base.html" %}
+{% block b1 %}
+<div>
+  <h3>회원 정보 수정</h3>
+  <div id="alert-bar"></div>
+</div>
+<div class="form-wrapper">
+  <form id="form" class="mt-5">
+        <input id="email" class="form-control mb-4" type="text" placeholder="email" readonly>
+        <input id="name" class="form-control mb-4" type="text" placeholder="name (필수)" autocomplete="off">
+        <input id="phonenumber" class="form-control mb-4" type="text" placeholder="phonenumber (010-0000-0000)" autocomplete="off">
+        <input id="address" class="form-control mb-4" type="text" placeholder="address" autocomplete="off">
+  </form>
+  <a class="btn btn-dark btn-lg mr-3" href="password_change">비밀번호 변경</a>
+  <button id="update" class="btn btn-dark btn-lg">정보 수정하기</button>
+</div>
+
+<script>
+  var csrftoken = getCookie('csrftoken');
+  var email = document.getElementById('email')
+  var name_input = document.getElementById('name')
+  var phonenumber = document.getElementById('phonenumber')
+  var address = document.getElementById('address')
+  var alert_bar = document.getElementById('alert-bar')
+
+  var update_button = document.getElementById('update')
+  update_button.addEventListener('click', update)
+
+  getDetail()
+
+  function getDetail(){
+    const url = "/api/user/profile"
+    fetch(url, {
+      method: 'get',
+      headers: {
+        'Content-type':'application/json'
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('data: ', data)
+      email.value = data['email']
+      name_input.value = data['name']
+      phonenumber.value = data['phonenumber']
+      address.value = data['address']
+    })
+    .catch(error => console.log(error))
+  }
+
+  function update(){
+    const url = "/api/user/profile"
+    fetch(url, {
+      method: 'put',
+      headers: {
+        'Content-type':'application/json',
+        'X-CSRFToken': csrftoken
+      },
+      body: JSON.stringify({
+        'email': email.value,
+        'name': name_input.value,
+        'phonenumber': phonenumber.value == ""? null : phonenumber.value,
+        'address': address.value == ""? null : address.value
+      })
+    })
+    .then(response => {
+      console.log(response)
+      if (response['status'] == 200){
+        alert_bar.innerHTML = ''
+        alert_bar.innerHTML += `
+        <div class="alert alert-success mt-3">
+          수정이 완료되었습니다!
+        </div>
+        `
+      } else {
+        alert_bar.innerHTML = ''
+        alert_bar.innerHTML += `
+        <div class="alert alert-warning mt-3">
+          이름은 필수 입력사항입니다.
+        </div>
+        `
+      }
+    })
+    .catch(error => console.log(error))
+  }
+</script>
+{% endblock %}

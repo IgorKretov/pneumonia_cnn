@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'user',
     'frontend',
     'archive',
+    'cnn_model',
 ]
 
 MIDDLEWARE = [

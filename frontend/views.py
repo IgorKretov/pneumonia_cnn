@@ -17,16 +17,20 @@ def logout(request):
     return render(request, 'frontend/logout.html')
 
 
-def archive(request):
-    return render(request, 'frontend/archive/index.html')
+def user_detail(request):
+    return render(request, 'frontend/user_detail.html')
 
 
-def archive_create(request):
-    return render(request, 'frontend/archive/create.html')
+def password_change(request):
+    return render(request, 'frontend/password_change.html')
 
 
 def archive_list(request):
     return render(request, 'frontend/archive/list.html')
+
+
+def archive_create(request):
+    return render(request, 'frontend/archive/create.html')
 
 
 def archive_detail(request, archive_id):

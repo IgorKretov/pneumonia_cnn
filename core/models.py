@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, \
                                         PermissionsMixin
 from django.conf import settings
+from phone_field import PhoneField
 import uuid
 import os
 
@@ -34,6 +35,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(max_length=255, unique=True)
     name = models.CharField(max_length=255)
     is_staff = models.BooleanField(default=False)
+    phonenumber = PhoneField(null=True)
     address = models.CharField(max_length=255, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 

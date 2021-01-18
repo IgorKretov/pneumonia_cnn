@@ -26,14 +26,15 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = get_user_model()
-        fields = ('id', 'email', 'password', 'name', 'address')
+        fields = ('id', 'email', 'password', 'name', 'phonenumber', 'address')
         extra_kwargs = {
             'password': {
                 'write_only': True,
                 'style': {'input_type': 'password'},
                 'min_length': 6,
             },
-            'name': {'required': True}
+            'phonenumber': {'required': False},
+            'address': {'required': False}
         }
 
     def create(self, validated_data):
@@ -44,7 +45,7 @@ class UserUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = get_user_model()
-        fields = ('email', 'name', 'address')
+        fields = ('email', 'name', 'phonenumber', 'address')
         extra_kwargs = {
             'email': {'read_only': True},
             'name': {'required': True}
