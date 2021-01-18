@@ -1,13 +1,12 @@
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from django.test import TestCase
-
 from rest_framework import status
 from rest_framework.test import APIClient
-
 from core.models import Image, Archive
 from archive.serializers import ImageSerializer
-
+from cnn_model.model_serving import process_image, predict
+from app.settings import CNN_MODEL_PATH
 import tempfile
 import PIL
 import os
@@ -150,3 +149,30 @@ class ImageTests(TestCase):
             self.assertTrue(os.path.exists(image_instance.image.path))
 
             image_instance.image.delete()
+
+    def test_predict_image(self):
+        """Test predicting the probability of a given image."""
+        image_instance = Image.objects.create(
+            archive=self.archive,
+            name='image'
+        )
+        with tempfile.NamedTemporaryFile(suffix='.jpg') as NTF:
+            image = PIL.Image.new('RGB', (50, 50))
+            image.save(NTF, format='JPEG')
+            NTF.seek(0)
+            self.client.put(
+                image_upload_url(image_instance.id),
+                {'image': NTF},
+                format='multipart'
+            )
+
+        response = self.client.put(image_predict_url(image_instance.id))
+        image_instance.refresh_from_db()
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn('predicted_class', response.data)
+        self.assertIn('predicted_value', response.data)
+        self.assertTrue(image_instance.predicted_class != None)
+        self.assertTrue(image_instance.predicted_value != None)
+
+        image_instance.image.delete()
