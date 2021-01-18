@@ -40,38 +40,22 @@
         var image = data[index]['image']
         var predicted_class = data[index]['predicted_class']
         var predicted_value = data[index]['predicted_value']
-        if (image != null) {
-          var card = `
-            <div class="col">
-              <div class="card h-100">
-                <img src=${image} height=200 alt="이미지 업로드 필요">
-                <div class="card-body text-dark">
-                  <h5 class="card-title"><a href="/archive/image_detail/${id}">${name}</a></h5>
-                  <p class="card-text">${info}</p>
-                  <p class="card-text">예측 결과: ${predicted_class} ${predicted_value}%</p>
-                </div>
+        var card = `
+          <div class="col mb-4">
+            <div class="card h-100">
+              <img src=${image} onerror="this.style.display='none'" height=200>
+              <div class="card-body text-dark">
+                <h5 class="card-title"><a href="/archive/image_detail/${id}">${name}</a></h5>
+                <p class="card-text">${info}</p>
+                <p class="card-text text-primary">예측 결과:
+                  ${predicted_class == null? "" : predicted_class }
+                  ${predicted_value == null? "" : predicted_value + "%" }</p>
               </div>
             </div>
-          `
-          list.innerHTML += card
-        }
-        else {
-          var card = `
-            <div class="col">
-              <div class="card h-100">
-                <p class="text-center mt-5">이미지를 업로드하세요.</p>
-                <div class="card-body text-dark">
-                  <h5 class="card-title"><a href="/archive/image_detail/${id}">${name}</a></h5>
-                  <p class="card-text">${info}</p>
-                  <p class="card-text">${predicted_class}</p>
-                  <p class="card-text">${predicted_value}</p>
-                </div>
-              </div>
-            </div>
-          `
-          list.innerHTML += card
-        }
-        }
+          </div>
+        `
+        list.innerHTML += card
+      }
     })
     .catch(error => console.log(error))
   }
