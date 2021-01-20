@@ -22,9 +22,8 @@ def predict(model_path, img_array):
     """
     loaded_model = load_model(model_path)
     y_hat = loaded_model.predict(img_array)
-    if np.argmax(y_hat[0]) == 0:
-        p_normal = round(y_hat[0][0] * 100, 3)
-        return ('normal', p_normal)
+    predicted_value = y_hat[0][0]
+    if predicted_value < 0.5:
+        return ('normal', round(predicted_value * 100, 3))
     else:
-        p_pneumonia = round(y_hat[0][1] * 100, 3)
-        return ('pneumonia', p_pneumonia)
+        return ('pneumonia', round(predicted_value * 100, 3))

@@ -14,7 +14,10 @@ predict = views.ImagePredictionViewSet.as_view({
 
 urlpatterns = [
     path('list', views.ArchiveList.as_view(), name='list'),
-    path('detail/<int:id>/', views.ArchiveDetail.as_view(), name='detail'),
+    path(
+        'detail/<int:id>/',
+        views.ArchiveDetail.as_view(),
+        name='detail'),
     path(
         'image_list/<int:archive_id>/',
         views.ImageList.as_view(),

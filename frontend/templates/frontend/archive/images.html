@@ -47,9 +47,10 @@
               <div class="card-body text-dark">
                 <h5 class="card-title"><a href="/archive/image_detail/${id}">${name}</a></h5>
                 <p class="card-text">${info}</p>
-                <p class="card-text text-primary">예측 결과:
-                  ${predicted_class == null? "" : predicted_class }
-                  ${predicted_value == null? "" : predicted_value + "%" }</p>
+                <p class="card-text text-primary">
+                  예측 결과: ${predicted_class == null? "" : predicted_class } <br>
+                  폐렴 확률: ${predicted_value == null? "" : predicted_value + "%" }
+                </p>
               </div>
             </div>
           </div>
