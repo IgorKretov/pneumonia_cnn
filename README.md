@@ -1,11 +1,11 @@
 # pneumonia_cnn
 
-# installation
+### Installation
 <pre>
 git clone https://github.com/samuelkim7/pneumonia_cnn
 </pre>
 
-# RUN
+### RUN
 해당 폴더 내에서
 <pre>
 docker-compose build
