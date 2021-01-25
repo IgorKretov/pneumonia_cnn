@@ -18,10 +18,12 @@ services:
     depends_on:
       - db
 
-  deploy:
-    resources:
-      limits:
-        memory: 3072M
+  service:
+    image: nginx
+    deploy:
+      resources:
+        limits:
+          memory: 3072M
 
   db:
     image: postgres:10-alpine
