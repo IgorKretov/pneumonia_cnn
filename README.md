@@ -4,6 +4,7 @@
 <pre>
 cd /home
 git clone https://github.com/samuelkim7/pneumonia_cnn
+cd pneumonia_cnn
 </pre>
 
 ### Run in AWS EC2
