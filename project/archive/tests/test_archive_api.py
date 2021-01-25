@@ -49,7 +49,7 @@ class ArchiveTests(TestCase):
 
         response = self.client.get(ARCHIVE_LIST_URL)
 
-        archives = Archive.objects.filter(user=self.user)
+        archives = Archive.objects.filter(user=self.user).order_by('id')
         serializer = ArchiveSerializer(archives, many=True)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)

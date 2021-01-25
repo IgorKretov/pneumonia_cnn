@@ -9,7 +9,8 @@ services:
     volumes:
       - ./project:/project
     command: >
-      sh -c "python manage.py runserver 0.0.0.0:8000"
+      sh -c "python manage.py migrate &&
+             python manage.py runserver 0.0.0.0:8000"
     environment:
       - DB_HOST=db
       - DB_NAME=pneumonia_cnn
@@ -17,13 +18,6 @@ services:
       - DB_PASS=password
     depends_on:
       - db
-
-  service:
-    image: nginx
-    deploy:
-      resources:
-        limits:
-          memory: 3072M
 
   db:
     image: postgres:10-alpine

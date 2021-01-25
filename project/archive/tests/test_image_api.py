@@ -71,7 +71,7 @@ class ImageTests(TestCase):
 
         response = self.client.get(image_list_url(self.archive.id))
 
-        images = Image.objects.filter(archive=self.archive)
+        images = Image.objects.filter(archive=self.archive).order_by('id')
         serializer = ImageSerializer(images, many=True)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)

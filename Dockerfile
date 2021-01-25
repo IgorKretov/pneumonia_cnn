@@ -8,7 +8,7 @@ RUN pip install --upgrade pip
 COPY ./requirements.txt /requirements.txt
 RUN pip install -r /requirements.txt
 
-# add dependency for opencv
+# add a dependency for opencv
 RUN apt-get update
 RUN apt-get install -y libglib2.0-0
 
