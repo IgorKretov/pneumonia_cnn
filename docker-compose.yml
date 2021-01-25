@@ -18,6 +18,11 @@ services:
     depends_on:
       - db
 
+  deploy:
+    resources:
+      limits:
+        memory: 3072M
+
   db:
     image: postgres:10-alpine
     environment:
