@@ -16,8 +16,7 @@ git clone https://github.com/samuelkim7/pneumonia_cnn
 docker-compose build
 docker-compose run
 </pre>
-- You can test this app with the images in the sample_data folder.
-- You can run this app in the local environment by setting up the python virtual environment. But this needs some  
+- You can test this app with the images in the sample_data folder. 
 
 ### [Application Demo](https://www.youtube.com/watch?v=aMNBIkWI-x0)
 
