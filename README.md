@@ -1,7 +1,7 @@
 # pneumonia_cnn
 
 ### Stack
-- back-end: Django, Django restframework, postgres / IDE: atom
+- back-end: Django, Django restframework, PostgreSQL / IDE: atom
 - front-end: HTML/CSS, Javascript, Bootstrap
 - CNN model: Tensorflow 2.3.1 / Learning environment: Kaggle notebook (GPU)
 
@@ -12,9 +12,11 @@ git clone https://github.com/samuelkim7/pneumonia_cnn
 
 ### RUN
 <pre>
-# git clone을 수행한 폴더 내에서
+# in the folder where .git file is
 docker-compose build
 docker-compose run
 </pre>
-- sample_data 내에 있는 이미지로 테스트 가능
+- You can test this app with the images in the sample_data folder. 
+
+### [Application Demo](https://www.youtube.com/watch?v=aMNBIkWI-x0)
 
