@@ -1,7 +1,7 @@
 # pneumonia_cnn
 
 ### Stack
-- back-end: Django, Django restframework, postgres / IDE: atom
+- back-end: Django, Django restframework, PostgreSQL / IDE: atom
 - front-end: HTML/CSS, Javascript, Bootstrap
 - CNN model: Tensorflow 2.3.1 / Learning environment: Kaggle notebook (GPU)
 
@@ -16,7 +16,8 @@ git clone https://github.com/samuelkim7/pneumonia_cnn
 docker-compose build
 docker-compose run
 </pre>
-- You can test this app with the images in the sample_data folder
+- You can test this app with the images in the sample_data folder.
+- You can run this app in the local environment by setting up the python virtual environment. But this needs some  
 
 ### [Application Demo](https://www.youtube.com/watch?v=aMNBIkWI-x0)
 
