@@ -7,12 +7,12 @@ def process_image(image_path):
     """process an image and return it as a numpy array in a specific shape
     which can be fed into a CNN model for prediction
     """
-    img = cv2.imread(image_path)
-    img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    img = cv2.resize(img, (196, 196))
-    img = img/255.0
-    img = np.reshape(img, (1, 196, 196, 1))
-    return img
+    image = cv2.imread(image_path)
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    image = cv2.resize(image, (196, 196))
+    image = image/255.0
+    image = np.reshape(image, (1, 196, 196, 1))
+    return image
 
 
 def predict(model_path, img_array):
